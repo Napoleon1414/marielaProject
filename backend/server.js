@@ -9,7 +9,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // Database setup
@@ -1354,19 +1354,25 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Database path: ${dbPath}`);
+  console.log(`🚀 Server starting...`);
+  console.log(`📍 Port: ${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🗄️ Database path: ${dbPath}`);
+  console.log(`🔗 Health check available at: http://0.0.0.0:${PORT}/health`);
   
   try {
+    console.log(`📊 Initializing database...`);
     initDatabase();
+    console.log(`👥 Setting up demo users...`);
     ensureDemoUsers();
     // Add a delay to ensure users are created before job postings
     setTimeout(() => {
+      console.log(`💼 Setting up demo job postings...`);
       ensureDemoJobPostings();
+      console.log(`✅ Server fully initialized and ready!`);
     }, 2000);
   } catch (error) {
-    console.error('Error during startup:', error);
+    console.error('❌ Error during startup:', error);
   }
 });
 
