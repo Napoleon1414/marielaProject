@@ -13,13 +13,17 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // Database setup
-const dbPath = path.join(__dirname, '../database/job_platform.db');
+const dbPath = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, 'database/job_platform.db')
+  : path.join(__dirname, '../database/job_platform.db');
 const db = new sqlite3.Database(dbPath);
 
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: 'http://localhost:4200', // Angular dev server
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-app-domain.com', 'http://localhost:4200'] 
+    : 'http://localhost:4200',
   credentials: true
 }));
 
@@ -31,6 +35,25 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(express.json());
+
+// Health check endpoint for deployment
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'public')));
+  
+  // Handle Angular routing
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+}
 
 // Authentication middleware
 const authenticateToken = (req, res, next) => {
@@ -53,7 +76,9 @@ const authenticateToken = (req, res, next) => {
 // Initialize database
 const initDatabase = () => {
   const fs = require('fs');
-  const schemaPath = path.join(__dirname, '../database/schema.sql');
+  const schemaPath = process.env.NODE_ENV === 'production'
+    ? path.join(__dirname, 'database/schema.sql')
+    : path.join(__dirname, '../database/schema.sql');
   const schema = fs.readFileSync(schemaPath, 'utf8');
   
   db.exec(schema, (err) => {

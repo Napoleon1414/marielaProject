@@ -212,24 +212,57 @@ db-migrate up
 
 ## Deployment
 
-### Frontend (Angular)
+### Quick Deployment (Recommended)
+
+1. **Prepare for deployment:**
+   ```bash
+   npm run deploy:prepare
+   ```
+
+2. **Deploy to your cloud platform:**
+   - Upload the `backend/` directory to your cloud platform
+   - Set environment variables:
+     - `NODE_ENV=production`
+     - `PORT=8080`
+     - `JWT_SECRET=your-secure-jwt-secret`
+
+### Manual Deployment
+
+#### Frontend (Angular)
 ```bash
-ng build --prod
-# Deploy dist/ folder to your web server
+npm run build
+# Deploy dist/demo/ folder to your web server
 ```
 
-### Backend (Node.js)
+#### Backend (Node.js)
 ```bash
-# Use PM2 for production process management
-npm install -g pm2
-pm2 start server.js --name "mariela-job-platform"
+cd backend
+npm install --production
+NODE_ENV=production PORT=8080 node server.js
 ```
 
-### Database (Production)
-- Use PostgreSQL or MongoDB for production
-- Set up automated backups
-- Configure connection pooling
-- Implement read replicas for scaling
+#### Docker Deployment
+```bash
+cd backend
+docker build -t mariela-job-platform .
+docker run -p 8080:8080 mariela-job-platform
+```
+
+### Cloud Platform Configuration
+
+#### Environment Variables
+- `NODE_ENV=production`
+- `PORT=8080` (or your platform's port)
+- `JWT_SECRET=your-secure-jwt-secret`
+
+#### Health Check Endpoint
+The backend includes a health check at `/health` for cloud platforms.
+
+#### CORS Configuration
+Update the CORS origin in `backend/server.js` with your domain:
+```javascript
+origin: ['https://your-domain.com', 'http://localhost:4200']
+```
 
 ## Contributing
 

@@ -10,7 +10,9 @@
     "dev:frontend": "npm start",
     "install:all": "npm install && cd backend && npm install",
     "start:prod": "concurrently \"npm run build && npm run serve:prod\" \"cd backend && npm start\"",
-    "serve:prod": "ng serve --prod"
+    "serve:prod": "ng serve --prod",
+    "deploy:prepare": "./deploy.sh",
+    "deploy:build": "npm run build && npm run deploy:prepare"
   },
   "dependencies": {
     "@angular/animations": "^19.0.6",
