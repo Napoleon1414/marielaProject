@@ -22,7 +22,7 @@ const db = new sqlite3.Database(dbPath);
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-app-domain.com', 'http://localhost:4200'] 
+    ? ['https://hammerhead-app-s89yi.ondigitalocean.app', 'http://localhost:4200'] 
     : 'http://localhost:4200',
   credentials: true
 }));
@@ -48,11 +48,6 @@ app.get('/health', (req, res) => {
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'public')));
-  
-  // Handle Angular routing
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
 }
 
 // Authentication middleware
@@ -1358,14 +1353,21 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
-  initDatabase();
-  ensureDemoUsers();
-  // Add a delay to ensure users are created before job postings
-  setTimeout(() => {
-    ensureDemoJobPostings();
-  }, 2000);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Database path: ${dbPath}`);
+  
+  try {
+    initDatabase();
+    ensureDemoUsers();
+    // Add a delay to ensure users are created before job postings
+    setTimeout(() => {
+      ensureDemoJobPostings();
+    }, 2000);
+  } catch (error) {
+    console.error('Error during startup:', error);
+  }
 });
 
 module.exports = app; 
@@ -1448,4 +1450,11 @@ app.get('/api/messages/conversation/:userId', authenticateToken, (req, res) => {
       })));
     }
   );
-}); 
+});
+
+// Handle Angular routing in production (must be last)
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+} 
