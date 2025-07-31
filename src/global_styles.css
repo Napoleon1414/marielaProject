@@ -1,0 +1,19 @@
+/* Add application styles & imports to this file! */
+
+
+
+h1,
+div {
+  color: white;
+  text-align: center;
+  margin: 20px;
+  margin-bottom: 100px;
+}
+img {
+  border-radius: 500px;
+}
+
+.mybuttondiv {
+  text-align: center;
+  color: black;
+}
