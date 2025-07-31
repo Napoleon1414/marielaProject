@@ -53,6 +53,16 @@ The platform uses a comprehensive database schema with the following main tables
 - npm or yarn
 - Angular CLI (`npm install -g @angular/cli`)
 
+### Available Scripts
+
+The project includes several convenient scripts for development:
+
+- `npm run dev` - Start both frontend and backend in parallel
+- `npm run dev:frontend` - Start only the frontend
+- `npm run dev:backend` - Start only the backend
+- `npm run install:all` - Install dependencies for both frontend and backend
+- `npm run start:prod` - Build and serve production version with backend
+
 ### 1. Clone the Repository
 ```bash
 git clone <repository-url>
@@ -76,19 +86,30 @@ npm install
 # The schema is in database/schema.sql
 ```
 
-### 5. Start the Backend Server
+### 5. Install All Dependencies (Optional)
 ```bash
-cd backend
+# Install both frontend and backend dependencies in one command
+npm run install:all
+```
+
+### 6. Start Both Frontend and Backend (Recommended)
+```bash
+# Start both frontend and backend in parallel with one command
 npm run dev
 ```
-The server will start on `http://localhost:3001`
 
-### 6. Start the Frontend
+This will start:
+- Frontend on `http://localhost:4200`
+- Backend on `http://localhost:3001`
+
+### Alternative: Start Services Separately
 ```bash
-# In a new terminal, from the root directory
-ng serve
+# Start only the backend
+npm run dev:backend
+
+# Start only the frontend (in a new terminal)
+npm run dev:frontend
 ```
-The application will be available at `http://localhost:4200`
 
 ## Database Options
 
