@@ -15,18 +15,10 @@ cp -r dist/demo/* backend/public/
 echo "🗄️ Copying database files..."
 cp -r database/* backend/database/
 
-# Install backend dependencies
-echo "📦 Installing backend dependencies..."
+# Run backend deployment script
+echo "🔧 Running backend deployment..."
 cd backend
-npm install --production
-
-# Create production environment file
-echo "⚙️ Creating production environment..."
-cat > .env << EOF
-NODE_ENV=production
-PORT=8080
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
-EOF
+./deploy.sh
 
 echo "✅ Deployment preparation complete!"
 echo "📋 Next steps:"
