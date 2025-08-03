@@ -13,7 +13,8 @@
     "serve:prod": "ng serve --prod",
     "deploy:prepare": "./deploy.sh",
     "deploy:build": "npm run build && npm run deploy:prepare",
-    "deploy": "npm run build && cd backend && npm run deploy"
+    "deploy": "npm run build && cd backend && npm run deploy",
+    "deploy:prod": "npm run build && cd backend && npm start"
   },
   "dependencies": {
     "@angular/animations": "^19.0.6",
